@@ -7,13 +7,15 @@
 
 <img src="{% get_static_prefix %}img/{{auction.image}}" alt="No photo">
 <p style="font-size: 400%; position: relative ;top: -250px;left: 800px;"><strong>{{auction.price}}</strong>&ensp;грн</p>
-
 {% if not add_auction %}
- <a href="add_auction/{{auction.name}}">Add to favorites</a> 
- {% else %}
- <a href="/del_auction/{{auction.name}}">Remove from favorites</a>  
+<a href="add_auction/{{auction.name}}"><img
+        src="{% static 'img/add-to-favorites.png' %}" alt="Add to favorites"></a>
+{% else %}
+<a href="/del_auction/{{auction.name}}"><img style="width: 91px;height: 91px;"
+        src="{% static 'img/delete-favorit.jpeg' %}" alt="Remove from
+        favorites"></a>
 {% endif %}
-    
+
 
 <h5>Description </h5>
 <p>{{auction.description}}</p>
