@@ -7,7 +7,14 @@
 
 <img src="{% get_static_prefix %}img/{{auction.image}}" alt="No photo">
 <p style="font-size: 400%; position: relative ;top: -250px;left: 800px;"><strong>{{auction.price}}</strong>&ensp;грн</p>
-<a href="add_auction/{{auction.name}}">ADD</a>
+
+{% if not add_auction %}
+ <a href="add_auction/{{auction.name}}">Add to favorites</a> 
+ {% else %}
+ <a href="/del_auction/{{auction.name}}">Remove from favorites</a>  
+{% endif %}
+    
+
 <h5>Description </h5>
 <p>{{auction.description}}</p>
 {% endblock %}

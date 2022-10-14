@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -9,7 +9,8 @@ from .models import User, Auction, Category
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    context = dict(quantity=len(request.session.get("my_auction", [])))
+    return render(request, "auctions/index.html", context)
 
 
 def login_view(request):
@@ -72,7 +73,9 @@ def get_category(request, category):
     context = dict(
         auction=Auction.objects.filter(
             categor=Category.objects.get(name=category)
-        ).filter(active=True)
+        ).filter(active=True),
+        category=category,
+        quantity=len(request.session.get("my_auction", [])),
     )
     return render(request, "auctions/activ_auctions.html", context)
 
@@ -90,20 +93,40 @@ def category(request, categor):
 
 
 def get_auction(request, name):
-    context = dict(auction=Auction.objects.get(name=name))
+    context = dict(
+        auction=Auction.objects.get(name=name),
+        quantity=len(request.session.get("my_auction", [])),
+    )
+
+    if context["auction"].name in request.session.get("my_auction", []):
+        context["add_auction"] = True
     return render(request, "auctions/auction.html", context)
 
 
 def add_auction(request, name):
-    context = {}
-    request.session["my_auction"] = []
-    request.session["my_auction"].append(name)
-    context["active_list"] = request.session["my_auction"]
-    return HttpResponseRedirect(f"auction/{{name}}")
+    if not request.session.get("my_auction"):
+        request.session["my_auction"] = []
+    lst = request.session["my_auction"]
+    lst.append(name)
+    request.session["my_auction"] = lst
+    return HttpResponseRedirect("/")
+
+
+def del_auction(request, name):
+    lst = request.session.get("my_auction")
+    lst.remove(name)
+    request.session["my_auction"] = lst
+    return HttpResponseRedirect(reverse("my_auction"))
 
 
 def my_auction(request):
     session = request.session.get("my_auction")
+    context = {}
+    context["quantity"] = len(request.session.get("my_auction", []))
+
     if session:
-        return HttpResponse(request.session["my_auction"])
+        context["auction"] = [
+            Auction.objects.get(name=value, active=True) for value in session
+        ]
+        return render(request, "auctions/my_auctions.html", context)
     return HttpResponseRedirect(reverse("index"))
