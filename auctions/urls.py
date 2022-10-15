@@ -12,4 +12,5 @@ urlpatterns = [
     path("category/auction/add_auction/<str:name>", views.add_auction),
     path("my_auction", views.my_auction, name="my_auction"),
     path("del_auction/<str:name>", views.del_auction, name="del_auction"),
+    path("make_a_bet/<str:name>", views.make_a_bet, name="make_a_bet"),
 ]

@@ -15,12 +15,12 @@ class Category(models.Model):
 
 
 class Bid(models.Model):
-    big = models.IntegerField()
+    bid = models.IntegerField()
     author_bid = models.CharField(max_length=64)
     date_bid = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.big)
+        return str(self.bid)
 
 
 class Comments(models.Model):

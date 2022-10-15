@@ -6,6 +6,12 @@
 <h2>{{auction.product_name}}</h2>
 
 <img src="{% get_static_prefix %}img/{{auction.image}}" alt="No photo">
+<!--a href="/make_a_bet/{{auction.name}}">Make a bet</a-->
+<form action="/make_a_bet/{{auction.name}}" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="sumbit">
+</form>
 <p style="font-size: 400%; position: relative ;top: -250px;left: 800px;"><strong>{{auction.price}}</strong>&ensp;грн</p>
 {% if not add_auction %}
 <a href="add_auction/{{auction.name}}"><img

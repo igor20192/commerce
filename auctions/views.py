@@ -5,7 +5,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Auction, Category
+from .models import User, Auction, Category, Bid
+from .forms import MakeBetForms
 
 
 def index(request):
@@ -96,8 +97,8 @@ def get_auction(request, name):
     context = dict(
         auction=Auction.objects.get(name=name),
         quantity=len(request.session.get("my_auction", [])),
+        form=MakeBetForms(),
     )
-
     if context["auction"].name in request.session.get("my_auction", []):
         context["add_auction"] = True
     return render(request, "auctions/auction.html", context)
@@ -130,3 +131,25 @@ def my_auction(request):
         ]
         return render(request, "auctions/my_auctions.html", context)
     return HttpResponseRedirect(reverse("index"))
+
+
+def make_a_bet(request, name):
+    context = dict(
+        auction=Auction.objects.get(name=name),
+        quantity=len(request.session.get("my_auction", [])),
+        form=MakeBetForms(),
+    )
+
+    if context["auction"].name in request.session.get("my_auction", []):
+        context["add_auction"] = True
+
+    if request.method == "POST":
+        form = MakeBetForms(request.POST)
+        if form.is_valid():
+            obj = Auction.objects.get(name=name).id
+            Bid.objects.filter(auction=obj).update(
+                bid=form.cleaned_data.get("bid"), author_bid=str(request.user)
+            )
+            return render(request, "auctions/auction.html", context)
+
+    return render(request, "auctions/auction.html", context)
