@@ -1,7 +1,9 @@
+from unicodedata import name
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect
+from django.forms import ValidationError
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -93,17 +95,6 @@ def category(request, categor):
         return get_category(request, "Toys")
 
 
-def get_auction(request, name):
-    context = dict(
-        auction=Auction.objects.get(name=name),
-        quantity=len(request.session.get("my_auction", [])),
-        form=MakeBetForms(),
-    )
-    if context["auction"].name in request.session.get("my_auction", []):
-        context["add_auction"] = True
-    return render(request, "auctions/auction.html", context)
-
-
 def add_auction(request, name):
     if not request.session.get("my_auction"):
         request.session["my_auction"] = []
@@ -133,6 +124,13 @@ def my_auction(request):
     return HttpResponseRedirect(reverse("index"))
 
 
+def check_rate(name_auction, bid):
+    price = Auction.objects.get(name=name_auction).price.bid
+    if bid > price:
+        return True
+    return False
+
+
 def make_a_bet(request, name):
     context = dict(
         auction=Auction.objects.get(name=name),
@@ -146,10 +144,12 @@ def make_a_bet(request, name):
     if request.method == "POST":
         form = MakeBetForms(request.POST)
         if form.is_valid():
-            obj = Auction.objects.get(name=name).id
-            Bid.objects.filter(auction=obj).update(
-                bid=form.cleaned_data.get("bid"), author_bid=str(request.user)
-            )
-            return render(request, "auctions/auction.html", context)
-
+            bid = form.cleaned_data.get("bid")
+            if check_rate(name, bid):
+                obj = Auction.objects.get(name=name).id
+                Bid.objects.filter(auction=obj).update(
+                    bid=bid, author_bid=str(request.user)
+                )
+                return render(request, "auctions/auction.html", context)
+            return HttpResponse("The bid must be greater than the current price")
     return render(request, "auctions/auction.html", context)

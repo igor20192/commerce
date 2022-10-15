@@ -7,7 +7,7 @@
 
 <img src="{% get_static_prefix %}img/{{auction.image}}" alt="No photo">
 <!--a href="/make_a_bet/{{auction.name}}">Make a bet</a-->
-<form action="/make_a_bet/{{auction.name}}" method="post">
+<form action="/category/auction/{{auction.name}}" method="post">
     {% csrf_token %}
     {{form.as_p}}
     <input type="submit" value="sumbit">
