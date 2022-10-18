@@ -7,8 +7,12 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 
+import auctions
+
 from .models import User, Auction, Category, Bid
 from .forms import MakeBetForms
+
+template_registr = "auctions/register.html"
 
 
 def index(request):
@@ -53,7 +57,7 @@ def register(request):
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(
-                request, "auctions/register.html", {"message": "Passwords must match."}
+                request, template_registr, {"message": "Passwords must match."}
             )
 
         # Attempt to create new user
@@ -63,13 +67,13 @@ def register(request):
         except IntegrityError:
             return render(
                 request,
-                "auctions/register.html",
+                template_registr,
                 {"message": "Username already taken."},
             )
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, "auctions/register.html")
+        return render(request, template_registr)
 
 
 def get_category(request, category):
@@ -136,6 +140,7 @@ def make_a_bet(request, name):
         auction=Auction.objects.get(name=name),
         quantity=len(request.session.get("my_auction", [])),
         form=MakeBetForms(),
+        users=str(request.user),
     )
 
     if context["auction"].name in request.session.get("my_auction", []):
@@ -153,3 +158,30 @@ def make_a_bet(request, name):
                 return render(request, "auctions/auction.html", context)
             return HttpResponse("The bid must be greater than the current price")
     return render(request, "auctions/auction.html", context)
+
+
+def close_the_auction(request, name):
+    Auction.objects.filter(name=name).update(active=False)
+    obj = Auction.objects.get(name=name).id
+    winner = Bid.objects.get(auction=obj).author_bid
+    return HttpResponseRedirect(reverse("index"))
+
+
+def close_auction_list(request):
+    context = dict(
+        close_auction=Auction.objects.filter(active=False),
+        quantity=len(request.session.get("my_auction", [])),
+    )
+    return render(request, "auctions/close_auction.html", context)
+
+
+def get_winner_auction(request, name):
+    auctions = Auction.objects.get(name=name)
+    bid = Bid.objects.get(auction=auctions.id)
+    context = dict(
+        auctions=auctions, quantity=len(request.session.get("my_auction", []))
+    )
+    if str(request.user) == bid.author_bid:
+        context["winner"] = request.user
+
+    return render(request, "auctions/winner_auction.html", context)
