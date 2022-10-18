@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.urls import path
 
 from . import views
@@ -12,4 +13,11 @@ urlpatterns = [
     path("category/auction/add_auction/<str:name>", views.add_auction),
     path("my_auction", views.my_auction, name="my_auction"),
     path("del_auction/<str:name>", views.del_auction, name="del_auction"),
+    path(
+        "close_the_auction/<str:name>",
+        views.close_the_auction,
+        name="close_the_auction",
+    ),
+    path("close_auction", views.close_auction_list, name="close_auction"),
+    path("winner_auction/<str:name>", views.get_winner_auction, name="winner_auction"),
 ]

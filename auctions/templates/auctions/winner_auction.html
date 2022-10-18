@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+<h2>{{auctions.product_name}}</h2>
+
+{% if winner %}
+<p>Auction Winner <strong style="color:red ;">{{winner}}!</strong></p>
+{% else %}
+<p><strong>Auction ended</strong></p>
+{% endif %}
+
+<img src="{% get_static_prefix %}img/{{auctions.image}}" alt="No photo">
+<p style="font-size: 400%; position: relative ;top: -250px;left: 800px;"><strong>{{auctions.price}}</strong>&ensp;грн</p>
+{% endblock %}

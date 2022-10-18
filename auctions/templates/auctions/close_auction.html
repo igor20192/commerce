@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+<h2>Сlosed auctions</h2>
+
+{% if close_auction %}
+
+{% for data in close_auction %}
+<a href="winner_auction/{{data.name}}"><h5>{{data.name}}</h5></a>
+<a href="winner_auction/{{data.name}}"><img
+        src="{% get_static_prefix %}img/{{data.image}}" width="110"
+        height="130"
+        alt="No photo"></a>
+
+{% endfor %}
+{% else %}
+<p>No auktions</p>
+
+{% endif %}
+
+
+
+{% endblock %}

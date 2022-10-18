@@ -162,8 +162,6 @@ def make_a_bet(request, name):
 
 def close_the_auction(request, name):
     Auction.objects.filter(name=name).update(active=False)
-    obj = Auction.objects.get(name=name).id
-    winner = Bid.objects.get(auction=obj).author_bid
     return HttpResponseRedirect(reverse("index"))
 
 
@@ -177,11 +175,10 @@ def close_auction_list(request):
 
 def get_winner_auction(request, name):
     auctions = Auction.objects.get(name=name)
-    bid = Bid.objects.get(auction=auctions.id)
     context = dict(
         auctions=auctions, quantity=len(request.session.get("my_auction", []))
     )
-    if str(request.user) == bid.author_bid:
+    if str(request.user) == auctions.price.author_bid:
         context["winner"] = request.user
 
     return render(request, "auctions/winner_auction.html", context)

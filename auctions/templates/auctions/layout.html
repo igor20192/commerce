@@ -25,6 +25,10 @@
 
                 <a class="nav-link" href="{% url 'my_auction' %}">Active
                     Listings {{quantity}}</a>
+
+                <a href="{% url 'close_auction' %}" style="position:relative
+                    ;left: 1100px;top:
+                    -30px;">Сlosed auctions</a>
             </li>
             {% if user.is_authenticated %}
             <li class="nav-item">

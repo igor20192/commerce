@@ -22,6 +22,9 @@
         favorites"></a>
 {% endif %}
 
+{% if auction.author_auct == users %}
+<a href="/close_the_auction/{{auction.name}}">Сlose the auction</a>
+{% endif %}
 
 <h5>Description </h5>
 <p>{{auction.description}}</p>
