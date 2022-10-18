@@ -1,3 +1,4 @@
+from cProfile import label
 from email.policy import default
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -25,7 +26,7 @@ class Bid(models.Model):
 
 class Comments(models.Model):
     auction_name = models.CharField(max_length=64)
-    comments = models.TextField()
+    comments = models.TextField("Add comments")
     author_comments = models.CharField(max_length=64)
     date_comm = models.DateTimeField(auto_now=True)
 

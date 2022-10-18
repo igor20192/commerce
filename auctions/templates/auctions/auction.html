@@ -9,8 +9,8 @@
 <!--a href="/make_a_bet/{{auction.name}}">Make a bet</a-->
 <form action="/category/auction/{{auction.name}}" method="post">
     {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="sumbit">
+    {{form.as_table}}
+    <input type="submit" value="send">
 </form>
 <p style="font-size: 400%; position: relative ;top: -250px;left: 800px;"><strong>{{auction.price}}</strong>&ensp;грн</p>
 {% if not add_auction %}
@@ -28,4 +28,26 @@
 
 <h5>Description </h5>
 <p>{{auction.description}}</p>
+
+<h5>Сomment for this product {{auction.name}}</h5>
+
+{% if comments %}
+{% for comment in comments %}
+<div>
+<p>{{comment.author_comments}}</p>
+<p style="width: 1000px; ;">{{comment.comments}}</p>
+<p>{{comment.date_comm}}</p>
+<hr>
+</div>
+{% endfor %}
+{% else %}
+<p>No comments</p>
+{% endif %}
+
+<form action="/comments/{{auction.name}}" method="post">
+    {% csrf_token %}
+    {{form_comment.as_table}}
+    <input type="submit" value="send">
+</form>   
+    
 {% endblock %}

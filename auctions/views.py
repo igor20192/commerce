@@ -1,16 +1,15 @@
-from unicodedata import name
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.forms import ValidationError
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 
 import auctions
 
-from .models import User, Auction, Category, Bid
-from .forms import MakeBetForms
+
+from .models import User, Auction, Category, Bid, Comments
+from .forms import MakeBetForms, CommentsForm
 
 template_registr = "auctions/register.html"
 
@@ -140,7 +139,9 @@ def make_a_bet(request, name):
         auction=Auction.objects.get(name=name),
         quantity=len(request.session.get("my_auction", [])),
         form=MakeBetForms(),
+        form_comment=CommentsForm(),
         users=str(request.user),
+        comments=Comments.objects.filter(auction_name=name),
     )
 
     if context["auction"].name in request.session.get("my_auction", []):
@@ -182,3 +183,18 @@ def get_winner_auction(request, name):
         context["winner"] = request.user
 
     return render(request, "auctions/winner_auction.html", context)
+
+
+def comments(request, name):
+    if request.method == ("POST"):
+        form_comment = CommentsForm(request.POST)
+        if form_comment.is_valid():
+            comment = form_comment.cleaned_data.get("comments")
+            obj = Auction.objects.get(name=name)
+            Comments.objects.create(
+                auction=obj,
+                comments=comment,
+                author_comments=str(request.user),
+                auction_name=obj.name,
+            )
+    return HttpResponseRedirect(reverse("auction", args=[name]))
