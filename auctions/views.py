@@ -104,7 +104,7 @@ def add_auction(request, name):
     lst = request.session["my_auction"]
     lst.append(name)
     request.session["my_auction"] = lst
-    return HttpResponseRedirect("/")
+    return HttpResponseRedirect(reverse("my_auction"))
 
 
 def del_auction(request, name):
@@ -124,7 +124,7 @@ def my_auction(request):
             Auction.objects.get(name=value, active=True) for value in session
         ]
         return render(request, "auctions/my_auctions.html", context)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect("/")
 
 
 def check_rate(name_auction, bid):
