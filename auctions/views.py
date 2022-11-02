@@ -116,13 +116,18 @@ def del_auction(request, name):
 
 def my_auction(request):
     session = request.session.get("my_auction")
-    context = {}
-    context["quantity"] = len(request.session.get("my_auction", []))
+
+    context = dict(quantity=len(request.session.get("my_auction", [])), auction=[])
 
     if session:
-        context["auction"] = [
-            Auction.objects.get(name=value, active=True) for value in session
-        ]
+        for name_auct in session:
+            obj = Auction.objects.get(name=name_auct)
+            if obj.active:
+                context["auction"].append(obj)
+            else:
+                session.remove(obj.name)
+        request.session["my_auction"] = session
+        context["quantity"] = len(session)
         return render(request, "auctions/my_auctions.html", context)
     return HttpResponseRedirect("/")
 
