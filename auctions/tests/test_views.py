@@ -13,17 +13,18 @@ class TestViews(TestCase):
         Comments.objects.create(
             auction_name="test", comments="test", author_comments="test"
         )
-        Auction.objects.create(
-            name="test_auction",
-            brief_descrip="test",
-            product_name="product",
-            description="description",
-            image="auctions/static/img/Toys.png",
-            author_auct="user",
-            active=True,
-            categor=Category.objects.get(name="Home"),
-            price=Bid.objects.get(id=1),
-        )
+        for name in ("test_auction", "test_auction1", "test_auction2"):
+            Auction.objects.create(
+                name=f"{name}",
+                brief_descrip="test",
+                product_name="product",
+                description="description",
+                image="auctions/static/img/Toys.png",
+                author_auct="user",
+                active=True,
+                categor=Category.objects.get(name="Home"),
+                price=Bid.objects.get(id=1),
+            )
 
     URL = "/my_auction"
 
@@ -66,6 +67,22 @@ class TestViews(TestCase):
         self.assertTemplateUsed(response2, "auctions/my_auctions.html")
         self.assertEqual(response2.context["quantity"], 1)
         self.assertEqual(response2.context["auction"][0].name, "test_auction")
+        self.client.get("/category/auction/add_auction/test_auction1")
+        self.client.get("/category/auction/add_auction/test_auction2")
+        response3 = self.client.get(url)
+        self.assertEqual(response3.context["quantity"], 3)
+        self.assertEqual(
+            [obj.name for obj in response3.context["auction"]],
+            ["test_auction", "test_auction1", "test_auction2"],
+        )
+        self.client.get("/close_the_auction/test_auction2")
+        response4 = self.client.get(url)
+        self.assertEqual(response4.context["quantity"], 2)
+        self.assertEqual(
+            [obj.name for obj in response4.context["auction"]],
+            ["test_auction", "test_auction1"],
+        )
+        self.assertTemplateUsed(response4, "auctions/my_auctions.html")
 
     def test_make_a_bet(self):
         self.client.login(username="user", password="7777")
