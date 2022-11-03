@@ -98,6 +98,7 @@ def category(request, categor):
         return get_category(request, "Toys")
 
 
+@login_required
 def add_auction(request, name):
     if not request.session.get("my_auction"):
         request.session["my_auction"] = []
@@ -107,6 +108,7 @@ def add_auction(request, name):
     return HttpResponseRedirect(reverse("my_auction"))
 
 
+@login_required
 def del_auction(request, name):
     lst = request.session.get("my_auction")
     lst.remove(name)
@@ -114,6 +116,7 @@ def del_auction(request, name):
     return HttpResponseRedirect(reverse("my_auction"))
 
 
+@login_required
 def my_auction(request):
     session = request.session.get("my_auction")
 
@@ -139,6 +142,7 @@ def check_rate(name_auction, bid):
     return False
 
 
+@login_required
 def make_a_bet(request, name):
     context = dict(
         auction=Auction.objects.get(name=name),
@@ -166,11 +170,13 @@ def make_a_bet(request, name):
     return render(request, "auctions/auction.html", context)
 
 
+@login_required
 def close_the_auction(request, name):
     Auction.objects.filter(name=name).update(active=False)
     return HttpResponseRedirect(reverse("index"))
 
 
+@login_required
 def close_auction_list(request):
     context = dict(
         close_auction=Auction.objects.filter(active=False),
@@ -179,6 +185,7 @@ def close_auction_list(request):
     return render(request, "auctions/close_auction.html", context)
 
 
+@login_required
 def get_winner_auction(request, name):
     auctions = Auction.objects.get(name=name)
     context = dict(
@@ -190,6 +197,7 @@ def get_winner_auction(request, name):
     return render(request, "auctions/winner_auction.html", context)
 
 
+@login_required
 def comments(request, name):
     if request.method == ("POST"):
         form_comment = CommentsForm(request.POST)
