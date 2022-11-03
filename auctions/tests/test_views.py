@@ -42,6 +42,7 @@ class TestViews(TestCase):
         self.assertNotEqual(response.context.get("quantity"), 1)
 
     def test_add_auction(self, url=URL):
+        self.client.login(username="user", password="7777")
         self.client.get("/category/auction/add_auction/test_auction1")
         response = self.client.get("/category/auction/add_auction/test_auction2")
         session = self.client.session
@@ -50,6 +51,7 @@ class TestViews(TestCase):
         self.assertEqual(response.url, url)
 
     def test_del_auction(self, url=URL):
+        self.client.login(username="user", password="7777")
         self.client.get("/category/auction/add_auction/test_auction12")
         session = self.client.session
         self.assertEqual(session.get("my_auction"), ["test_auction12"])
@@ -60,6 +62,7 @@ class TestViews(TestCase):
         self.assertEqual(response.url, url)
 
     def test_my_auction(self, url=URL):
+        self.client.login(username="user", password="7777")
         response = self.client.get(url)
         self.assertRedirects(response, "/")
         self.client.get("/category/auction/add_auction/test_auction")
@@ -100,12 +103,14 @@ class TestViews(TestCase):
         self.assertContains(response2, "The bid must be greater than the current price")
 
     def test_close_the_auction(self):
+        self.client.login(username="user", password="7777")
         response = self.client.get("/close_the_auction/test_auction")
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Auction.objects.get(name="test_auction").active)
         self.assertRedirects(response, "/")
 
     def test_close_auction_list(self):
+        self.client.login(username="user", password="7777")
         self.client.get("/close_the_auction/test_auction")
         response = self.client.get("/close_auction")
         self.assertEqual(response.status_code, 200)
