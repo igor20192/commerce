@@ -1,5 +1,3 @@
-from unicodedata import name
-from urllib import response
 from django.test import TestCase
 from auctions.models import User, Auction, Bid, Category, Comments
 
@@ -95,12 +93,17 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context.get("quantity"), 1)
         self.assertTemplateUsed(response, "auctions/auction.html")
+        self.assertEqual(response.context.get("success"), "Bet successfully placed!")
         self.assertEqual(response.context.get("auction").price.bid, 101)
         self.assertEqual(response.context.get("auction").price.author_bid, "user")
         data2 = {"bid": 99, "author_bid": "user"}
         response2 = self.client.post("/category/auction/test_auction", data2)
         self.assertEqual(response2.status_code, 200)
-        self.assertContains(response2, "The bid must be greater than the current price")
+        self.assertEqual(
+            response2.context.get("warning"),
+            "The bid must be greater than the current price",
+        )
+        self.assertTemplateUsed(response2, "auctions/auction.html")
 
     def test_close_the_auction(self):
         self.client.login(username="user", password="7777")
@@ -142,4 +145,31 @@ class TestViews(TestCase):
         self.assertEqual(
             obj_auction.commet.get(auction_name="test_auction").author_comments,
             "user",
+        )
+
+    def test_make_auction(self):
+        self.client.login(username="user", password="7777")
+
+        data = dict(
+            name="test_auction3",
+            author_auct="user",
+            brief_descrip="brief_descrip",
+            categor="Home",
+            product_name="product_name",
+            description="description",
+            price=150,
+        )
+        response = self.client.post("/make_auction", data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            Auction.objects.get(name="test_auction3").name, "test_auction3"
+        ),
+        self.assertEqual(Auction.objects.get(name="test_auction3").author_auct, "user"),
+        self.assertEqual(Auction.objects.get(name="test_auction3").price.bid, 150),
+        self.assertTemplateUsed(response, "auctions/auction.html")
+        data["name"] = "test_auction"
+        response = self.client.post("/make_auction", data)
+        self.assertContains(
+            response,
+            "Check the entered data. Perhaps an auction with the same name already exists",
         )

@@ -4,14 +4,13 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
-
-import auctions
-
+from django.db.utils import IntegrityError
 
 from .models import User, Auction, Category, Bid, Comments
-from .forms import MakeBetForms, CommentsForm
+from .forms import MakeBetForms, CommentsForm, MakeAuction
 
 template_registr = "auctions/register.html"
+template_auction = "auctions/auction.html"
 
 
 def index(request):
@@ -142,8 +141,7 @@ def check_rate(name_auction, bid):
     return False
 
 
-@login_required
-def make_a_bet(request, name):
+def get_context(request, name):
     context = dict(
         auction=Auction.objects.get(name=name),
         quantity=len(request.session.get("my_auction", [])),
@@ -155,7 +153,12 @@ def make_a_bet(request, name):
 
     if context["auction"].name in request.session.get("my_auction", []):
         context["add_auction"] = True
+    return context
 
+
+@login_required
+def make_a_bet(request, name):
+    context = dict()
     if request.method == "POST":
         form = MakeBetForms(request.POST)
         if form.is_valid():
@@ -165,9 +168,13 @@ def make_a_bet(request, name):
                 Bid.objects.filter(auction=obj).update(
                     bid=bid, author_bid=str(request.user)
                 )
-                return render(request, "auctions/auction.html", context)
-            return HttpResponse("The bid must be greater than the current price")
-    return render(request, "auctions/auction.html", context)
+                context["success"] = "Bet successfully placed!"
+                return render(
+                    request, template_auction, get_context(request, name) | context
+                )
+            context["warning"] = "The bid must be greater than the current price"
+
+    return render(request, template_auction, get_context(request, name) | context)
 
 
 @login_required
@@ -211,3 +218,45 @@ def comments(request, name):
                 auction_name=obj.name,
             )
     return HttpResponseRedirect(reverse("auction", args=[name]))
+
+
+@login_required
+def make_auction(request):
+    if request.method == "POST":
+        form = MakeAuction(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data.get("name")
+            brief_descrip = form.cleaned_data.get("brief_descrip")
+            categor = form.cleaned_data.get("categor")
+            product_name = form.cleaned_data.get("product_name")
+            description = form.cleaned_data.get("description")
+            image = form.cleaned_data.get("image")
+            price = form.cleaned_data.get("price")
+            author_auct = str(request.user)
+            try:
+                auction_price = Bid.objects.create(bid=price, author_bid=author_auct).id
+
+                Auction.objects.create(
+                    name=name,
+                    author_auct=author_auct,
+                    brief_descrip=brief_descrip,
+                    categor=Category.objects.get(name=categor),
+                    product_name=product_name,
+                    description=description,
+                    image=image,
+                    price=Bid.objects.get(pk=auction_price),
+                    active=True,
+                )
+
+                return render(
+                    request, "auctions/auction.html", get_context(request, name)
+                )
+            except Exception:
+                return HttpResponse(
+                    "Check the entered data. Perhaps an auction with the same name already exists"
+                )
+    quantity = len(request.session.get("my_auction", []))
+    form = MakeAuction()
+    return render(
+        request, "auctions/make_auction.html", {"form": form, "quantity": quantity}
+    )

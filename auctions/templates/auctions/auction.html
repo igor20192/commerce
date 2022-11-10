@@ -4,50 +4,95 @@
 
 {% block body %}
 <h2>{{auction.product_name}}</h2>
+<div class="container">
+  <img src="{% get_static_prefix %}img/{{auction.image}}" alt="No photo" width="500">
+  <p style="font-size: 350%;"><strong>{{auction.price}}</strong>&ensp;грн</p>
 
-<img src="{% get_static_prefix %}img/{{auction.image}}" alt="No photo">
-<!--a href="/make_a_bet/{{auction.name}}">Make a bet</a-->
-<form action="/category/auction/{{auction.name}}" method="post">
-    {% csrf_token %}
-    {{form.as_table}}
-    <input type="submit" value="send">
-</form>
-<p style="font-size: 400%; position: relative ;top: -250px;left: 800px;"><strong>{{auction.price}}</strong>&ensp;грн</p>
-{% if not add_auction %}
-<a href="add_auction/{{auction.name}}"><img
-        src="{% static 'img/add-to-favorites.png' %}" alt="Add to favorites"></a>
-{% else %}
-<a href="/del_auction/{{auction.name}}"><img style="width: 91px;height: 91px;"
-        src="{% static 'img/delete-favorit.jpeg' %}" alt="Remove from
-        favorites"></a>
+{% if warning %}
+    <div class="alert alert-warning" role="alert">
+        {{warning}}
+    </div>
 {% endif %}
 
-{% if auction.author_auct == users %}
-<a href="/close_the_auction/{{auction.name}}">Сlose the auction</a>
+{% if success %} 
+     <div class="alert alert-success" role="alert">
+        {{success}}
+    </div>
 {% endif %}
 
-<h5>Description </h5>
-<p>{{auction.description}}</p>
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid"></div>
+    <form action="{% url 'auction' auction.name %}" method="post">
+      {% csrf_token %}
+      {{form.as_table}}
+      <input class="btn btn-primary" type="submit" value="send">
+    </form>
+  </div>
+</nav>
 
-<h5>Сomment for this product {{auction.name}}</h5>
+  <nav class="navbar navbar-light bg-light">
+    {% if not add_auction %}
+    <a href="add_auction/{{auction.name}}"><img
+            src="{% static 'img/add-to-favorites.png' %}" style="width: 50px;" alt="Add to
+            favorites"></a>
+    {% else %}
+    <a href="/del_auction/{{auction.name}}"><img style="width: 50px;"
+            src="{% static 'img/delete-favorit.jpeg' %}" alt="Remove from
+            favorites"></a>
+    {% endif %}
 
-{% if comments %}
-{% for comment in comments %}
-<div>
-<p style="color:rgb(59, 125, 201) ;">{{comment.author_comments}}</p>
-<p style="width: 1000px; ;">{{comment.comments}}</p>
-<p>{{comment.date_comm}}</p>
-<hr>
+    {% if auction.author_auct == users %}
+    <a href="/close_the_auction/{{auction.name}}">Сlose the auction</a>
+    {% endif %}
+  </nav>
 </div>
-{% endfor %}
-{% else %}
-<p>No comments</p>
-{% endif %}
 
-<form action="/comments/{{auction.name}}" method="post">
-    {% csrf_token %}
-    {{form_comment.as_table}}
-    <input type="submit" value="send">
-</form>   
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            Description
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <p class="fst-italic">{{auction.description}}</p> 
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Сomment for this product {{auction.name}}
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                {% if comments %}
+                {% for comment in comments %}
+                <div class="container">
+                    <p style="color:rgb(59, 125, 201) ;">{{comment.author_comments}}</p>
+                    <p class="lh-1">{{comment.comments}}</p>
+                    <p>{{comment.date_comm}}</p>
+                    <hr>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No comments</p>
+                {% endif %}
+                <nav class="navbar navbar-light bg-light">
+                    <div class="container-fluid"></div>
+                        <form action="/comments/{{auction.name}}" method="post">
+                        {% csrf_token %}
+                        {{form_comment.as_table}}
+                        <input class="btn btn-primary" type="submit" value="send">
+                        </form>
+                    </div>
+                </nav> 
+              </div>
+            </div>
+        </div>
+        
+    </div>
     
 {% endblock %}

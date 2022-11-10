@@ -1,50 +1,59 @@
 {% load static %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}Auctions{% endblock %}</title>
-        <link rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
             crossorigin="anonymous">
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
         <link rel="icon" type="image/x-icon" href="{% static '/favicon.ico' %}">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-            Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-            Not signed in.
-            {% endif %}
-        </div>
-        <ul class="nav">
-            <li class="nav-item">
+        <nav class="navbar navbar-light" style="background-color: #d6e2e4;">
+            <div class="container-fluid">
+                <h1>Auctions</h1>
 
+                {% if user.is_authenticated %}
+                Signed in as <strong>{{ user.username }}</strong>.
                 <a class="nav-link" href="{% url 'my_auction' %}">Active
                     Listings {{quantity}}</a>
+                {% else %}
+                Not signed in.
+                {% endif %}
+                <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'make_auction' %}">Add auction</a>
+                <a href="{% url 'close_auction' %}">Сlosed auctions</a>
 
-                <a href="{% url 'close_auction' %}" style="position:relative
-                    ;left: 1100px;top:
-                    -30px;">Сlosed auctions</a>
-            </li>
-            {% if user.is_authenticated %}
-            <li class="nav-item">
+
+                {% if user.is_authenticated %}
+
                 <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-            </li>
-            {% else %}
-            <li class="nav-item">
+
+                {% else %}
+
                 <a class="nav-link" href="{% url 'login' %}">Log In</a>
-            </li>
-            <li class="nav-item">
+
+
                 <a class="nav-link" href="{% url 'register' %}">Register</a>
-            </li>
-            {% endif %}
-        </ul>
-        <hr>
+                {% endif %}
+
+            </nav>
+        </div>
+
         {% block body %}
         {% endblock %}
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
     </body>
+
 </html>

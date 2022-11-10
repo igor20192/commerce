@@ -33,11 +33,11 @@ class Comments(models.Model):
 
 class Auction(models.Model):
     name = models.CharField(max_length=64, default="", unique=True)
-    brief_descrip = models.CharField(max_length=100, default="")
+    brief_descrip = models.CharField(max_length=250, default="")
     categor = models.ForeignKey(Category, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=64)
     description = models.TextField()
-    image = models.ImageField(blank=True)
+    image = models.ImageField(blank=True, upload_to="media")
     price = models.ForeignKey(Bid, on_delete=models.CASCADE)
     author_auct = models.CharField(max_length=64)
     active = models.BooleanField()

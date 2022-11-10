@@ -2,28 +2,32 @@
 {% load static %}
 
 {% block body %}
-<h2>Active Listings</h2>
+<div class="text-center">
+    <h2>Active Listings</h2>
 
-<p><a href="category/Home">Home</a></p>
-<p><a href="category/Home"><img src="{% static 'img/Home.png' %}"
-            alt="Home"></a></p>
-
-
-<p><a href="category/Fashion">Fashion</a></p>
-<p><a href="category/Fashion"><img src="{% static 'img/Fashion.png' %}"
-            alt="Fashion"></a></p>
+    <p><a href="category/Home">Home</a></p>
+    <p><a href="category/Home"><img src="{% static 'img/Home.png' %}"
+                class="img-thumbnail"
+                alt="Home" width="400"></a></p>
 
 
-<p><a href="category/Toys">Toys</a></p>
-<p><a href="category/Toys"><img src="{% static 'img/Toys.png' %}"
-            alt='Toys'></a></p>
+    <p><a href="category/Fashion">Fashion</a></p>
+    <p><a href="category/Fashion"><img src="{% static 'img/Fashion.png' %}"
+                class="img-thumbnail"
+                alt="Fashion" width="400"></a></p>
 
 
-<p><a href="category/Electronics">Electronics</a></p>
-<p><a href="category/Electronics"><img
-            src="{% static 'img/Electronics.png' %}"
-            alt="Electronics"></a></p>
+    <p><a href="category/Toys">Toys</a></p>
+    <p><a href="category/Toys"><img src="{% static 'img/Toys.png' %}"
+                class="img-thumbnail"
+                alt='Toys' width="400"></a></p>
 
 
+    <p><a href="category/Electronics">Electronics</a></p>
+    <p><a href="category/Electronics"><img
+                src="{% static 'img/Electronics.png' %}" class="img-thumbnail"
+                alt="Electronics" width="400"></a></p>
+
+</div>
 
 {% endblock %}

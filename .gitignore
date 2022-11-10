@@ -2,3 +2,6 @@
 __pycache__
 venv_commerce
 *.log
+static
+media
+*.json
