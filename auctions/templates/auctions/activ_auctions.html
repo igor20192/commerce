@@ -2,22 +2,36 @@
 {% load static %}
 
 {% block body %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        {% for categor_name in list_category %}
+        <li class="breadcrumb-item">
+            <a href="{% url 'category' categor_name.name %}">{{categor_name.name}}</a></li>
+        {% endfor %}
+        <li class="breadcrumb-item active" aria-current="page">Auctions
+            {{category}}</li>
+    </ol>
+</nav>
+
 <h2>Auctions {{category}}</h2>
-
-{% if auction %}
-{% for data in auction %}
-<a href="auction/{{data.name}}"><h5>{{data.name}}</h5></a>
-<a href="auction/{{data.name}}"><img
-                src="{% get_static_prefix %}img/{{data.image}}" width="110"
-                height="130"
-                alt="No photo"></a>
-{{data.price}} грн
-<p>{{data.brief_descrip}}</p>
-{% endfor %}
-{% else %}
-<p>No auktions</p>
-{% endif %}
-
+<div class="container">
+    {% if auction %}
+    {% for data in auction %}
+    <a href="auction/{{data.name}}"><h5>{{data.name}}</h5></a>
+    <a href="auction/{{data.name}}"><img
+            class="img-thumbnail"
+            src="{% get_static_prefix %}img/{{data.image}}" width="110"
+            height="130"
+            alt="No photo"></a>
+    <p>{{data.price}} грн</p>
+    <p>{{data.brief_descrip}}</p>
+    {% endfor %}
+    {% else %}
+    <p>No auktions</p>
+    {% endif %}
+</div>
 
 
 
