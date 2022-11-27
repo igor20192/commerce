@@ -82,6 +82,7 @@ def get_category(request, category):
         ).filter(active=True),
         category=category,
         quantity=len(request.session.get("my_auction", [])),
+        list_category=Category.objects.exclude(name=category),
     )
     return render(request, "auctions/activ_auctions.html", context)
 
@@ -259,11 +260,13 @@ def view_that_asks_for_money(request, price, name):
         "invoice": "unique-invoice-id",
         "notify_url": request.build_absolute_uri(reverse("paypal-ipn")),
         "return": request.build_absolute_uri(reverse("index")),
-        "cancel_return": request.build_absolute_uri(reverse("payment", args=[name])),
+        "cancel_return": request.build_absolute_uri(
+            reverse(get_winner_auction, args=[name])
+        ),
         "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
     }
 
     # Create the instance.
     form = PayPalPaymentsForm(initial=paypal_dict)
     context = {"form": form}
-    return render(request, "payment.html", context)
+    return render(request, "paypal/payment.html", context)
