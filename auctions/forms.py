@@ -1,6 +1,3 @@
-from dataclasses import fields
-from pyexpat import model
-from xml.etree.ElementInclude import include
 from django import forms
 from .models import Bid, Comments, Auction, Category
 
@@ -17,10 +14,18 @@ class CommentsForm(forms.ModelForm):
         fields = ["comments"]
 
 
+class MakeAuction(forms.ModelForm):
+    class Meta:
+        model = Auction
+        exclude = ("commet", "price", "active", "author_auct")
+
+    price = forms.IntegerField(min_value=0)
+
+
 list_category = [(category.name, category.name) for category in Category.objects.all()]
 
 
-class MakeAuction(forms.Form):
+"""class MakeAuction(forms.Form):
     name = forms.CharField(label="auction name", max_length=64)
     brief_descrip = forms.CharField(max_length=250)
     categor = forms.ChoiceField(
@@ -31,4 +36,7 @@ class MakeAuction(forms.Form):
     product_name = forms.CharField(max_length=64)
     description = forms.CharField(widget=forms.Textarea())
     image = forms.ImageField(required=False)
-    price = forms.IntegerField()
+    image1 = forms.ImageField(required=False)
+    image2 = forms.ImageField(required=False)
+    image3 = forms.ImageField(required=False)
+    price = forms.IntegerField()"""

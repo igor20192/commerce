@@ -5,3 +5,4 @@ venv_commerce
 static
 media
 *.json
+db.sqlite3

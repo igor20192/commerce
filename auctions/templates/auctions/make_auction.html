@@ -2,6 +2,19 @@
 {% load static %}
 {% block body %}
 
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Create auction</li>
+    </ol>
+</nav>
+
+{% if warning %}
+<div class="alert alert-warning" role="alert">
+    {{warning}}
+</div>
+{% endif %}
+
 <form action="{% url 'make_auction' %}" method="post">
     <div class="mb-3">
         {% csrf_token %}

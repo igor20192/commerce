@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.db.utils import IntegrityError
 
+from paypal.standard.forms import PayPalPaymentsForm
 from .models import User, Auction, Category, Bid, Comments
 from .forms import MakeBetForms, CommentsForm, MakeAuction
 
@@ -91,8 +92,8 @@ def category(request, categor):
         return get_category(request, "Electronics")
     if categor == "Fashion":
         return get_category(request, "Fashion")
-    if categor == "Home":
-        return get_category(request, "Home")
+    if categor == "For home":
+        return get_category(request, "For home")
     if categor == "Toys":
         return get_category(request, "Toys")
 
@@ -224,39 +225,45 @@ def comments(request, name):
 def make_auction(request):
     if request.method == "POST":
         form = MakeAuction(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data.get("name")
-            brief_descrip = form.cleaned_data.get("brief_descrip")
-            categor = form.cleaned_data.get("categor")
-            product_name = form.cleaned_data.get("product_name")
-            description = form.cleaned_data.get("description")
-            image = form.cleaned_data.get("image")
-            price = form.cleaned_data.get("price")
-            author_auct = str(request.user)
-            try:
-                auction_price = Bid.objects.create(bid=price, author_bid=author_auct).id
+        try:
+            obj = form.save(commit=False)
+            auction_price = Bid.objects.create(
+                bid=request.POST.get("price"), author_bid=str(request.user)
+            ).id
+            obj.price = Bid.objects.get(pk=auction_price)
+            obj.author_auct = str(request.user)
+            obj.save()
 
-                Auction.objects.create(
-                    name=name,
-                    author_auct=author_auct,
-                    brief_descrip=brief_descrip,
-                    categor=Category.objects.get(name=categor),
-                    product_name=product_name,
-                    description=description,
-                    image=image,
-                    price=Bid.objects.get(pk=auction_price),
-                    active=True,
-                )
+            return render(
+                request, "auctions/auction.html", get_context(request, obj.name)
+            )
 
-                return render(
-                    request, "auctions/auction.html", get_context(request, name)
-                )
-            except Exception:
-                return HttpResponse(
-                    "Check the entered data. Perhaps an auction with the same name already exists"
-                )
+        except Exception:
+            return HttpResponse(
+                "Check the entered data. Perhaps an auction with the same name already exists"
+            )
     quantity = len(request.session.get("my_auction", []))
     form = MakeAuction()
     return render(
         request, "auctions/make_auction.html", {"form": form, "quantity": quantity}
     )
+
+
+def view_that_asks_for_money(request, price, name):
+
+    # What you want the button to do.
+    paypal_dict = {
+        "business": "receiver_email@example.com",
+        "amount": int(price),
+        "item_name": "name of the item",
+        "invoice": "unique-invoice-id",
+        "notify_url": request.build_absolute_uri(reverse("paypal-ipn")),
+        "return": request.build_absolute_uri(reverse("index")),
+        "cancel_return": request.build_absolute_uri(reverse("payment", args=[name])),
+        "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"form": form}
+    return render(request, "payment.html", context)

@@ -1,5 +1,4 @@
-from cProfile import label
-from email.policy import default
+from django.templatetags.static import static
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -16,7 +15,7 @@ class Category(models.Model):
 
 
 class Bid(models.Model):
-    bid = models.IntegerField()
+    bid = models.PositiveIntegerField()
     author_bid = models.CharField(max_length=64)
     date_bid = models.DateTimeField(auto_now=True)
 
@@ -32,15 +31,36 @@ class Comments(models.Model):
 
 
 class Auction(models.Model):
-    name = models.CharField(max_length=64, default="", unique=True)
+    name = models.CharField(
+        max_length=64, default="", unique=True, help_text="This field must be unique"
+    )
     brief_descrip = models.CharField(max_length=250, default="")
     categor = models.ForeignKey(Category, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=64)
     description = models.TextField()
-    image = models.ImageField(blank=True, upload_to="media")
+    image = models.ImageField(
+        blank=True,
+        upload_to="media",
+        default=("not_photo.jpeg"),
+    )
+    image1 = models.ImageField(
+        blank=True,
+        upload_to="media",
+        default=("not_photo1.jpeg"),
+    )
+    image2 = models.ImageField(
+        blank=True,
+        upload_to="media",
+        default=("not_photo2.jpeg"),
+    )
+    image3 = models.ImageField(
+        blank=True,
+        upload_to="media",
+        default=("not_photo3.jpeg"),
+    )
     price = models.ForeignKey(Bid, on_delete=models.CASCADE)
     author_auct = models.CharField(max_length=64)
-    active = models.BooleanField()
+    active = models.BooleanField(default=True)
     commet = models.ManyToManyField(Comments, blank=True)
 
     def __str__(self) -> str:

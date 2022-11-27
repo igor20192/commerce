@@ -90,26 +90,18 @@
 
   {% if not add_auction %}
 
-  <a href="{% url 'add_auction' auction.name %}"><img
-      src="{% static 'img/add-to-favorites.png' %}" style="width: 50px;"
+  <a type="button" class="btn btn-info"
+    href="{% url 'add_auction' auction.name %}"><img id="add_favorite"
+      src="{% static 'img/add-to-favorites.png' %}"
       alt="Add to
-      favorites"></a>
+      favorites">Favorite</a>
 
-  <button class="favorite-button"
-    onclick="location.href='/category/auction/add_auction/{{auction.name}}'">
-    <div class="icon">
-      <div class="star"></div>
-    </div>
-    <span>Favorite</span>
-  </button>
-
-  <a id="add_favorites" href="{% url 'add_auction' auction.name %}">Add to
-    favorites</a>
   {% else %}
-  <a href="{% url 'del_auction' auction.name %}"><img style="width: 50px;"
+
+  <a type="button" class="btn btn-info"
+    href="{% url 'del_auction' auction.name %}"><img id="del_favorite"
       src="{% static 'img/delete-favorit.jpeg' %}" alt="Remove from
-      favorites"></a>
-  <a href="{% url 'del_auction' auction.name %}">Remove from favorites</a>
+      favorites">Favorite</a>
   {% endif %}
 
   {% if auction.author_auct == users %}

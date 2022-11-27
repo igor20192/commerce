@@ -154,7 +154,7 @@ class TestViews(TestCase):
             name="test_auction3",
             author_auct="user",
             brief_descrip="brief_descrip",
-            categor="Home",
+            categor=Category.objects.get(name="Home"),
             product_name="product_name",
             description="description",
             price=150,

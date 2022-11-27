@@ -2,6 +2,16 @@
 {% load static %}
 
 {% block body %}
+
+<nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Closed
+                        {{len_close_auction}} auction
+                        {{len_close_auction|pluralize}}</li>
+        </ol>
+</nav>
+
 <h2>Сlosed auctions</h2>
 
 {% if close_auction %}
@@ -9,9 +19,9 @@
 {% for data in close_auction %}
 <a href="winner_auction/{{data.name}}"><h5>{{data.name}}</h5></a>
 <a href="winner_auction/{{data.name}}"><img
-        src="{% get_static_prefix %}img/{{data.image}}" width="110"
-        height="130"
-        alt="No photo"></a>
+                src="{% get_static_prefix %}img/{{data.image}}" width="110"
+                height="130"
+                alt="No photo"></a>
 
 {% endfor %}
 {% else %}

@@ -22,12 +22,12 @@
 
                 {% if user.is_authenticated %}
                 Signed in as <strong>{{ user.username }}</strong>.
-                <a class="nav-link" href="{% url 'my_auction' %}">Active
-                    Listings {{quantity}}</a>
+                <a class="nav-link" href="{% url 'my_auction' %}">Saved
+                    {{quantity}}</a>
                 {% else %}
                 Not signed in.
                 {% endif %}
-                <a href="{% url 'index' %}">Home</a>
+
                 <a href="{% url 'make_auction' %}">Add auction</a>
                 <a href="{% url 'close_auction' %}">Сlosed auctions</a>
 
@@ -44,8 +44,9 @@
                 <a class="nav-link" href="{% url 'register' %}">Register</a>
                 {% endif %}
 
-            </nav>
-        </div>
+            </div>
+        </nav>
+
 
         {% block body %}
         {% endblock %}
@@ -53,6 +54,88 @@
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
+
+
+        <script
+            src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.min.js'></script>
+        <script id=&quot;rendered-js&quot;>
+document.querySelectorAll('.favorite-button').forEach(button => {
+  button.addEventListener('click', e => {
+    e.preventDefault();
+
+    if (button.classList.contains('animated')) {
+      return;
+    }
+    button.classList.add('animated');
+
+    gsap.to(button, {
+      keyframes: [{
+        '--star-y': '-36px',
+        duration: .3,
+        ease: 'power2.out' },
+      {
+        '--star-y': '48px',
+        '--star-scale': .4,
+        duration: .325,
+        onStart() {
+          button.classList.add('star-round');
+        } },
+      {
+        '--star-y': '-64px',
+        '--star-scale': 1,
+        duration: .45,
+        ease: 'power2.out',
+        onStart() {
+          button.classList.toggle('active');
+          setTimeout(() => button.classList.remove('star-round'), 100);
+        } },
+      {
+        '--star-y': '0px',
+        duration: .45,
+        ease: 'power2.in' },
+      {
+        '--button-y': '3px',
+        duration: .11 },
+      {
+        '--button-y': '0px',
+        '--star-face-scale': .65,
+        duration: .125 },
+      {
+        '--star-face-scale': 1,
+        duration: .15 }],
+
+      clearProps: true,
+      onComplete() {
+        button.classList.remove('animated');
+      } });
+
+
+    gsap.to(button, {
+      keyframes: [{
+        '--star-hole-scale': .8,
+        duration: .5,
+        ease: 'elastic.out(1, .75)' },
+      {
+        '--star-hole-scale': 0,
+        duration: .2,
+        delay: .2 }] });
+
+
+
+    gsap.to(button, {
+      '--star-rotate': '360deg',
+      duration: 1.55,
+      clearProps: true });
+
+  });
+});
+//# sourceURL=pen.js
+    </script>
+
+        <footer>
+            <p>Author: Igor Udovenko<br>
+                <a href="mailto:igor.udovenko2015@gmail.com">igor.udovenko2015@gmail.com</a></p>
+        </footer>
 
     </body>
 

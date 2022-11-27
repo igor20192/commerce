@@ -3,14 +3,30 @@
 
 
 {% block body %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'close_auction' %}">Closed
+                auctions</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{auctions.product_name}}</li>
+    </ol>
+</nav>
+
 <h2>{{auctions.product_name}}</h2>
+<div class="container">
+    {% if winner %}
+    <p>Auction Winner <strong id="winer">{{winner}}!</strong></p>
+    {% else %}
+    <p><strong>Auction ended</strong></p>
+    {% endif %}
 
-{% if winner %}
-<p>Auction Winner <strong style="color:red ;">{{winner}}!</strong></p>
-{% else %}
-<p><strong>Auction ended</strong></p>
-{% endif %}
+    <img src="{% get_static_prefix %}img/{{auctions.image}}"
+        class="img-thumbnail" width="500" alt="No
+        photo">
+    <p id="p_winer_price"><strong>{{auctions.price}}</strong>&ensp;грн</p>
+    <a type="button" class="btn btn-info"
+        href="{% url 'payment' auctions.price auctions.name %}">Payment</a>
+    {% endblock %}
 
-<img src="{% get_static_prefix %}img/{{auctions.image}}" alt="No photo">
-<p style="font-size: 400%; position: relative ;top: -250px;left: 800px;"><strong>{{auctions.price}}</strong>&ensp;грн</p>
-{% endblock %}
+</div>

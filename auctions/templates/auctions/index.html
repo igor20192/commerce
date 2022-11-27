@@ -2,31 +2,51 @@
 {% load static %}
 
 {% block body %}
+
+<nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Home</li>
+            <li class="breadcrumb-item">
+                  <a href="{% url 'category' 'For home'%}">For home</a></li>
+            <li class="breadcrumb-item">
+                  <a href="{% url 'category' 'Fashion'%}">Fashion</a></li>
+            <li class="breadcrumb-item">
+                  <a href="{% url 'category' 'Toys' %}">Toys</a></li>
+            <li class="breadcrumb-item">
+                  <a href="{% url 'category' 'Electronics'%}">Electronics</a></li>
+      </ol>
+</nav>
+
 <div class="text-center">
-    <h2>Active Listings</h2>
 
-    <p><a href="category/Home">Home</a></p>
-    <p><a href="category/Home"><img src="{% static 'img/Home.png' %}"
-                class="img-thumbnail"
-                alt="Home" width="400"></a></p>
+      <h2>Active Listings</h2>
 
-
-    <p><a href="category/Fashion">Fashion</a></p>
-    <p><a href="category/Fashion"><img src="{% static 'img/Fashion.png' %}"
-                class="img-thumbnail"
-                alt="Fashion" width="400"></a></p>
+      <p><a href="{% url 'category' 'For home' %}">For home</a></p>
+      <p><a href="{% url 'category' 'For home' %}"><img
+                        src="{% static 'img/Home.png' %}"
+                        class="img-thumbnail"
+                        alt="For home" width="400"></a></p>
 
 
-    <p><a href="category/Toys">Toys</a></p>
-    <p><a href="category/Toys"><img src="{% static 'img/Toys.png' %}"
-                class="img-thumbnail"
-                alt='Toys' width="400"></a></p>
+      <p><a href="{% url 'category' 'Fashion' %}">Fashion</a></p>
+      <p><a href="{% url 'category' 'Fashion' %}"><img
+                        src="{% static 'img/Fashion.png' %}"
+                        class="img-thumbnail"
+                        alt="Fashion" width="400"></a></p>
 
 
-    <p><a href="category/Electronics">Electronics</a></p>
-    <p><a href="category/Electronics"><img
-                src="{% static 'img/Electronics.png' %}" class="img-thumbnail"
-                alt="Electronics" width="400"></a></p>
+      <p><a href="{% url 'category' 'Toys' %}">Toys</a></p>
+      <p><a href="{% url 'category' 'Toys' %}"><img
+                        src="{% static 'img/Toys.png' %}"
+                        class="img-thumbnail"
+                        alt='Toys' width="400"></a></p>
+
+
+      <p><a href="{% url 'category' 'Electronics' %}">Electronics</a></p>
+      <p><a href="{% url 'category' 'Electronics' %}"><img
+                        src="{% static 'img/Electronics.png' %}"
+                        class="img-thumbnail"
+                        alt="Electronics" width="400"></a></p>
 
 </div>
 
