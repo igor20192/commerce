@@ -30,6 +30,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = ["https://*.b3dc-91-247-94-55.eu.ngrok.io"]
+CSRF_COOKIE_DOMAIN = ".b3dc-91-247-94-55.eu.ngrok.io"
 
 # Application definition
 

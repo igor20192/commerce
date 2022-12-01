@@ -15,7 +15,7 @@ class Category(models.Model):
 
 
 class Bid(models.Model):
-    bid = models.PositiveIntegerField()
+    bid = models.IntegerField()
     author_bid = models.CharField(max_length=64)
     date_bid = models.DateTimeField(auto_now=True)
 
@@ -62,6 +62,7 @@ class Auction(models.Model):
     author_auct = models.CharField(max_length=64)
     active = models.BooleanField(default=True)
     commet = models.ManyToManyField(Comments, blank=True)
+    paid = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.name

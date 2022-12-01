@@ -106,7 +106,7 @@ def add_auction(request, name):
     lst = request.session["my_auction"]
     lst.append(name)
     request.session["my_auction"] = lst
-    return HttpResponseRedirect(reverse("my_auction"))
+    return HttpResponseRedirect(reverse(make_a_bet, args=[name]))
 
 
 @login_required
@@ -114,7 +114,7 @@ def del_auction(request, name):
     lst = request.session.get("my_auction")
     lst.remove(name)
     request.session["my_auction"] = lst
-    return HttpResponseRedirect(reverse("my_auction"))
+    return HttpResponseRedirect(reverse(make_a_bet, args=[name]))
 
 
 @login_required
@@ -251,15 +251,15 @@ def make_auction(request):
 
 
 def view_that_asks_for_money(request, price, name):
-
     # What you want the button to do.
+    obj = Auction.objects.get(name=name)
     paypal_dict = {
-        "business": "receiver_email@example.com",
-        "amount": int(price),
-        "item_name": "name of the item",
-        "invoice": "unique-invoice-id",
+        "business": "sb-nel43b22326328@business.example.com",
+        "amount": price,
+        "item_name": obj.product_name,
+        "invoice": str(obj.id),
         "notify_url": request.build_absolute_uri(reverse("paypal-ipn")),
-        "return": request.build_absolute_uri(reverse("index")),
+        "return": request.build_absolute_uri(reverse("success")),
         "cancel_return": request.build_absolute_uri(
             reverse(get_winner_auction, args=[name])
         ),

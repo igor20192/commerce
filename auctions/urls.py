@@ -1,6 +1,6 @@
 from unicodedata import name
 from django.urls import path
-
+from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
@@ -26,5 +26,10 @@ urlpatterns = [
     path("make_auction", views.make_auction, name="make_auction"),
     path(
         "payment/<str:price>/<str:name>", views.view_that_asks_for_money, name="payment"
+    ),
+    path(
+        "success",
+        TemplateView.as_view(template_name="paypal/success.html"),
+        name="success",
     ),
 ]
