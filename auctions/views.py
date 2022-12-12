@@ -290,5 +290,10 @@ def view_that_asks_for_money(request, price, name):
 
     # Create the instance.
     form = PayPalPaymentsForm(initial=paypal_dict)
-    context = {"form": form, "image": obj.image, "name": name}
+    context = {
+        "form": form,
+        "image": obj.image,
+        "name": obj.product_name,
+        "price": round(paypal_dict["amount"], 2),
+    }
     return render(request, "paypal/payment.html", context)
