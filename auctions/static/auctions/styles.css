@@ -25,7 +25,7 @@ p {
 }
 
 #p_not_commet {
-    color: #000;
+    color: rgb(253, 251, 251);
 }
 
 #auth_commet {
@@ -97,6 +97,15 @@ textarea {
     padding: 0px;
 }
 
+.accordion-body {
+    background-color: #050127;
+}
+
+.fst-italic {
+    background-color: rgb(34, 32, 32);
+    color: #ffffff;
+}
+
 footer {
     text-align: center;
     margin-top: 10px;
@@ -117,6 +126,26 @@ footer p {
 #del_favorite {
     width: 30px;
 }
+
+#photo-winner {
+    float: left;
+}
+
+#payment {
+    position: relative;
+    top: 100px;
+    left: 100px;
+}
+
+#form-paypal {
+    border: 3px solid aqua;
+    width: 30%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: center;
+    background: #404F5E;
+}
+
 
 .favorite-button {
     --background-default: #313440;

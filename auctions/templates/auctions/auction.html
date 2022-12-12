@@ -70,7 +70,9 @@
 
 <div id="price" class="p-3 mb-2 bg-dark text-white">
 
-  <form action="{% url 'auction' auction.name %}" method="post">
+  <form
+    action="{% url 'auction' auction.name auction.categor %}"
+    method="post">
     {% csrf_token %}
     {{form.as_table}}
     <input class="btn btn-primary" type="submit" value="send">
@@ -91,7 +93,8 @@
   {% if not add_auction %}
 
   <a type="button" class="btn btn-info"
-    href="{% url 'add_auction' auction.name %}"><img id="add_favorite"
+    href="{% url 'add_auction' auction.name auction.categor %}"><img
+      id="add_favorite"
       src="{% static 'img/add-to-favorites.png' %}"
       alt="Add to
       favorites">Favorite</a>
@@ -99,7 +102,8 @@
   {% else %}
 
   <a type="button" class="btn btn-info"
-    href="{% url 'del_auction' auction.name %}"><img id="del_favorite"
+    href="{% url 'del_auction' auction.name auction.categor %}"><img
+      id="del_favorite"
       src="{% static 'img/delete-favorit.jpeg' %}" alt="Remove from
       favorites">Favorite</a>
   {% endif %}
@@ -157,7 +161,8 @@
           {% endif %}
 
           <div class="container-fluid"></div>
-          <form action="/comments/{{auction.name}}" method="post">
+          <form action="{% url 'comments' auction.name auction.categor %}"
+            method="post">
             {% csrf_token %}
             {{form_comment.as_table}}
             <input class="btn btn-primary" type="submit"

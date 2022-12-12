@@ -1,3 +1,14 @@
-<h1>Show me the money!</h1>
-<!-- writes out the form tag automatically -->
-{{ form.render }}
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<div id="form-paypal" class="container-fluid">
+    <h1>{{name}}</h1>
+    <img src="{% get_static_prefix %}img/{{image}}"
+        alt="Not photo" width="200"
+        height="auto">
+    <!-- writes out the form tag automatically -->
+    {{ form.render }}
+</div>
+{% endblock %}

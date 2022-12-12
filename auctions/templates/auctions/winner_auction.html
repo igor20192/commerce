@@ -17,17 +17,16 @@
 <div class="container">
     {% if winner %}
     <p>Auction Winner <strong id="winer">{{winner}}!</strong></p>
-    <a type="button" class="btn btn-info"
+    <a type="button" id="payment" class="btn btn-info"
         href="{% url 'payment' auctions.price auctions.name %}">Payment</a>
     {% else %}
     <p><strong>Auction ended</strong></p>
     {% endif %}
 
-    <img src="{% get_static_prefix %}img/{{auctions.image}}"
+    <img id="photo-winner" src="{% get_static_prefix %}img/{{auctions.image}}"
         class="img-thumbnail" width="500" alt="No
         photo">
     <p id="p_winer_price"><strong>{{auctions.price}}</strong>&ensp;грн</p>
-
     {% endblock %}
 
 </div>

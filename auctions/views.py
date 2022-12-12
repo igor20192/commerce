@@ -6,9 +6,13 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.db.utils import IntegrityError
 
+
 from paypal.standard.forms import PayPalPaymentsForm
 from .models import User, Auction, Category, Bid, Comments
 from .forms import MakeBetForms, CommentsForm, MakeAuction
+from bs4 import BeautifulSoup
+import requests
+from decimal import Decimal
 
 template_registr = "auctions/register.html"
 template_auction = "auctions/auction.html"
@@ -100,21 +104,21 @@ def category(request, categor):
 
 
 @login_required
-def add_auction(request, name):
+def add_auction(request, name, categor):
     if not request.session.get("my_auction"):
         request.session["my_auction"] = []
     lst = request.session["my_auction"]
     lst.append(name)
     request.session["my_auction"] = lst
-    return HttpResponseRedirect(reverse(make_a_bet, args=[name]))
+    return HttpResponseRedirect(reverse(make_a_bet, args=[name, categor]))
 
 
 @login_required
-def del_auction(request, name):
+def del_auction(request, name, categor):
     lst = request.session.get("my_auction")
     lst.remove(name)
     request.session["my_auction"] = lst
-    return HttpResponseRedirect(reverse(make_a_bet, args=[name]))
+    return HttpResponseRedirect(reverse(make_a_bet, args=[name, categor]))
 
 
 @login_required
@@ -159,8 +163,8 @@ def get_context(request, name):
 
 
 @login_required
-def make_a_bet(request, name):
-    context = dict()
+def make_a_bet(request, name, categor):
+    context = dict(list_category=Category.objects.exclude(name=categor))
     if request.method == "POST":
         form = MakeBetForms(request.POST)
         if form.is_valid():
@@ -182,7 +186,7 @@ def make_a_bet(request, name):
 @login_required
 def close_the_auction(request, name):
     Auction.objects.filter(name=name).update(active=False)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse(close_auction_list))
 
 
 @login_required
@@ -207,7 +211,7 @@ def get_winner_auction(request, name):
 
 
 @login_required
-def comments(request, name):
+def comments(request, name, categor):
     if request.method == ("POST"):
         form_comment = CommentsForm(request.POST)
         if form_comment.is_valid():
@@ -219,13 +223,14 @@ def comments(request, name):
                 author_comments=str(request.user),
                 auction_name=obj.name,
             )
-    return HttpResponseRedirect(reverse("auction", args=[name]))
+    return HttpResponseRedirect(reverse("auction", args=[name, categor]))
 
 
 @login_required
 def make_auction(request):
     if request.method == "POST":
         form = MakeAuction(request.POST)
+
         try:
             obj = form.save(commit=False)
             auction_price = Bid.objects.create(
@@ -250,14 +255,30 @@ def make_auction(request):
     )
 
 
+def exchange_rate_usd():
+    url = "https://minfin.com.ua/ua/currency/usd/"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, "lxml")
+        quotes = soup.find(
+            "td", {"class": "mfm-text-nowrap", "data-title": "Курс гривні"}
+        )
+        return Decimal(quotes.contents[1].text[:7])
+    except Exception as exc:
+        raise requests.exceptions.RequestException(f"ERROR:{exc.__doc__}")
+
+
 def view_that_asks_for_money(request, price, name):
     # What you want the button to do.
     obj = Auction.objects.get(name=name)
     paypal_dict = {
+        "add": "1",
+        "no_shipping": 2,
         "business": "sb-nel43b22326328@business.example.com",
-        "amount": price,
+        "amount": Decimal(price) / exchange_rate_usd(),
         "item_name": obj.product_name,
-        "invoice": str(obj.id),
+        "invoice": obj.id,
         "notify_url": request.build_absolute_uri(reverse("paypal-ipn")),
         "return": request.build_absolute_uri(reverse("success")),
         "cancel_return": request.build_absolute_uri(
@@ -268,5 +289,5 @@ def view_that_asks_for_money(request, price, name):
 
     # Create the instance.
     form = PayPalPaymentsForm(initial=paypal_dict)
-    context = {"form": form}
+    context = {"form": form, "image": obj.image, "name": name}
     return render(request, "paypal/payment.html", context)

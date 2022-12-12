@@ -19,8 +19,8 @@
 <div class="container">
     {% if auction %}
     {% for data in auction %}
-    <a href="auction/{{data.name}}"><h5>{{data.name}}</h5></a>
-    <a href="auction/{{data.name}}"><img
+    <a href="{% url 'auction' data.name data.categor %}"><h5>{{data.name}}</h5></a>
+    <a href="{% url 'auction' data.name data.categor %}"><img
             class="img-thumbnail"
             src="{% get_static_prefix %}img/{{data.image}}" width="110"
             height="130"
