@@ -6,6 +6,7 @@ from .views import exchange_rate_usd
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from decimal import Decimal
+from django.conf import settings
 
 
 def my_transaction(obj):
@@ -37,7 +38,7 @@ def show_me_the_money(sender, **kwargs):
     ipn_obj = sender
     if ipn_obj.payment_status == ST_PP_COMPLETED:
 
-        if ipn_obj.receiver_email != "sb-nel43b22326328@business.example.com":
+        if ipn_obj.receiver_email != settings.PAYPAL_BUSINESS:
             # Not a valid payment
             return
 
