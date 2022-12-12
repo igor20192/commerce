@@ -4,12 +4,13 @@
 {% block body %}
 
 <div id="form-paypal" class="container-fluid">
-    <h1>{{name}}</h1>
-    <img src="{% get_static_prefix %}img/{{image}}"
+    <h1>{{auction.product_name}}</h1>
+    <img src="{% get_static_prefix %}img/{{auction.image}}"
         alt="Not photo" width="200"
         height="auto">
     <p>{{price}}$</p>
     <!-- writes out the form tag automatically -->
     {{ form.render }}
+    <a href="{% url 'winner_auction' auction.name %}">Cancel</a>
 </div>
 {% endblock %}
