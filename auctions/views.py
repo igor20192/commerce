@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.db.utils import IntegrityError
+from django.conf import settings
 
 
 from paypal.standard.forms import PayPalPaymentsForm
@@ -275,7 +276,7 @@ def view_that_asks_for_money(request, price, name):
     paypal_dict = {
         "add": "1",
         "no_shipping": 2,
-        "business": "sb-nel43b22326328@business.example.com",
+        "business": settings.PAYPAL_BUSINESS,
         "amount": Decimal(price) / exchange_rate_usd(),
         "item_name": obj.product_name,
         "invoice": obj.id,

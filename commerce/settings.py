@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 ]
 
 PAYPAL_TEST = True
+PAYPAL_BUSINESS = env("PAYPAL_BUSINESS")
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
