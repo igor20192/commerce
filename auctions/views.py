@@ -270,6 +270,7 @@ def exchange_rate_usd():
         raise requests.exceptions.RequestException(f"ERROR:{exc.__doc__}")
 
 
+@login_required
 def view_that_asks_for_money(request, price, name):
     # What you want the button to do.
     obj = Auction.objects.get(name=name)
