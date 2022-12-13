@@ -44,4 +44,8 @@
 
     python manage.py runserver
 
+або
+
+    python run.py
+
 I зайдіть на сайт у своєму браузері на http://127.0.0.1:8000/.
