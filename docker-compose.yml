@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8080
+    volumes:
+      - ./commrce/:/usr/src/app/
+    ports:
+      - 8080:8080
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14-alpine
+    volumes:
+      - postgres_date:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=auctions_user
+      - POSTGRES_PASSWORD=7777
+      - POSTGRES_DB=auctions
+
+volumes:
+  postgres_date:

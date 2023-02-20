@@ -36,8 +36,8 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = [env("CSRF_TRUSTED_ORIGINS")]
-CSRF_COOKIE_DOMAIN = env("CSRF_COOKIE_DOMAIN")
+# CSRF_TRUSTED_ORIGINS = [env("CSRF_TRUSTED_ORIGINS")]
+# CSRF_COOKIE_DOMAIN = env("CSRF_COOKIE_DOMAIN")
 
 # Application definition
 
@@ -98,6 +98,7 @@ WSGI_APPLICATION = "commerce.wsgi.application"
 # }
 
 DATABASES = {"default": env.db("DATABASE_URL")}
+
 
 AUTH_USER_MODEL = "auctions.User"
 
