@@ -96,7 +96,22 @@ WSGI_APPLICATION = "commerce.wsgi.application"
 #         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
 #     },
 # }
-DATABASES = {"default": env.db("DATABASE_URL")}
+
+# DATABASES = {"default": env.db("DATABASE_URL")}
+
+# DATABASES for docker
+DATABASES = {
+    "default": {
+        "ENGINE": env("ENGINE"),
+        "NAME": env("NAME"),
+        "USER": env("USER"),
+        "PASSWORD": env("PASSWORD"),
+        "HOST": env("HOST"),
+        "PORT": env("PORT"),
+    }
+}
+
+
 AUTH_USER_MODEL = "auctions.User"
 
 # Password validation
