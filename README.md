@@ -44,13 +44,9 @@
 
     python manage.py runserver
 
-або
+## Для запуска в Docker
 
-    python run.py
+Выполнить команды.
 
-I зайдіть на сайт у своєму браузері на http://127.0.0.1:8000/.
-
-Щоб запустити тести виконайте
-
-    python manage.py test auctions/tests
-
+    docker exec -i commerce_db_1 psql --username auctions_user auctions < backup.sql
+    docker-compose exec web python manage.py migrate --noinput
