@@ -97,7 +97,19 @@ WSGI_APPLICATION = "commerce.wsgi.application"
 #     },
 # }
 
-DATABASES = {"default": env.db("DATABASE_URL")}
+# DATABASES = {"default": env.db("DATABASE_URL")}
+
+# DATABASES for docker
+DATABASES = {
+    "default": {
+        "ENGINE": env("ENGINE"),
+        "NAME": env("NAME"),
+        "USER": env("USER"),
+        "PASSWORD": env("PASSWORD"),
+        "HOST": env("HOST"),
+        "PORT": env("PORT"),
+    }
+}
 
 
 AUTH_USER_MODEL = "auctions.User"
