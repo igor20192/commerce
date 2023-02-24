@@ -17,10 +17,8 @@ services:
     image: postgres:14-alpine
     volumes:
       - postgres_date:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=auctions_user
-      - POSTGRES_PASSWORD=7777
-      - POSTGRES_DB=auctions
+    env_file:
+      - ./.env.db
 
 volumes:
   postgres_date:
