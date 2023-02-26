@@ -1,0 +1,5 @@
+.vscode
+.gitignore
+venv_commerce
+.git
+__pycache__
