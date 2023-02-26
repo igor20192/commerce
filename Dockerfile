@@ -1,6 +1,6 @@
 FROM python:3.10.10-alpine
 
-WORKDIR /usr/scr/commerce
+WORKDIR /usr/src/commerce
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
