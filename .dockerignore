@@ -2,4 +2,4 @@
 .gitignore
 venv_commerce
 .git
-__pycache__
+.cache
