@@ -5,7 +5,11 @@ services:
     build: .
     command: python manage.py runserver 0.0.0.0:8080
     volumes:
+<<<<<<< HEAD
       - ./commrce/:/usr/src/app/
+=======
+      - ./:/usr/src/commerce/
+>>>>>>> bb12efc (edit docker-compose)
     ports:
       - 8080:8080
     env_file:
