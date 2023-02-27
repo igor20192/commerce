@@ -8,4 +8,8 @@ media
 db.sqlite3
 .env
 .env.db
+<<<<<<< HEAD
 run.py
+=======
+run.py
+>>>>>>> f8218eb (edit gitignore)
