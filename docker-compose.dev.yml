@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: igor2022/clockbox
+    image: igor2022/commerce_hub
     command: python manage.py runserver 0.0.0.0:8080
 
     ports:
