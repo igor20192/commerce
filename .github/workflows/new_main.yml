@@ -28,4 +28,4 @@ jobs:
           context: .
           run: docker-compose --build
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/clockbox:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/commerce_hub:latest
