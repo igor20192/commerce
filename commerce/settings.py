@@ -100,6 +100,7 @@ WSGI_APPLICATION = "commerce.wsgi.application"
 # DATABASES = {"default": env.db("DATABASE_URL")}
 
 # DATABASES for docker
+
 DATABASES = {
     "default": {
         "ENGINE": env("ENGINE"),
