@@ -3,3 +3,11 @@
 venv_commerce
 .git
 .cache
+.github
+db.sqlite3
+datadump.json
+debug.log
+docker-compose.dev.yml
+docker-compose.yml
+Dockerfile
+README.md
